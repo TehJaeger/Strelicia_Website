@@ -1,21 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import './LogIn.css';
 import '../App.css';
 
 
 const LogInSignup = () => {
-
-    const [action, setAction] = useState('');
-
-    const registerLink = () => {
-        setAction('active');
-    }
-    const loginLink = () => {
-        setAction('');
-    }
-
-
   return (
     <div className='container'>
     <div className='wrapper'>
