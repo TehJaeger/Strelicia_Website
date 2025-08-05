@@ -19,9 +19,6 @@ function HeroSection() {
             <Button  className='btns' buttonStyle='btn--primary' buttonSize='btn--large' onClick={() => window.open('https://www.instagram.com/streliciahouse/', '_blank')}>
                 Ver Mais
             </Button>
-            <Button className = 'btns' buttonStyle='btn--primary' buttonSize='btn--large'>
-                Play <i className='far fa-play-circle' />
-            </Button>
         </div>
     </div>
   )

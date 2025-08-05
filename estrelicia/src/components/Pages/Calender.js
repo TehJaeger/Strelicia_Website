@@ -1,6 +1,14 @@
 import React from "react";
 import '../../App.css';
+import Calendar from "../Calendar";
+import Footer from '../Footer';
 
 export default function Rent(){
-    return <h1 className="Calender">Calender</h1>;
+    return(
+        <> 
+        <Calendar/>;
+         <Footer/>;
+         </>
+    )
+
 }
