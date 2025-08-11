@@ -1,3 +1,11 @@
+.background{
+     display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('../../public/images/Img3.jpg') center center/cover no-repeat;
+}
+
 .container{
     width: 100%;
     height: 100vh;

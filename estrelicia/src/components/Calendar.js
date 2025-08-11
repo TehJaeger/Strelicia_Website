@@ -1,86 +1,125 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Calendar.css'
 
 const Calendar = () => {
+    const daysOfWeek = ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+    const monthsOfYear = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+    const currentDate = new Date();
+    const[currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
+    const[currentYear, setCurrentYear] = useState(currentDate.getFullYear());
+    const[selectedDate, setSelectedDate] = useState(currentDate);
+    const[showEventPopup, setShowEventPopup] = useState(false);
+
+    const[events, setEvents] = useState([]);
+    const[eventDays, setEventDays] = useState({day1 : '00', day2 : '00'});
+    const[eventText, setEventText] = useState('Arendamento Strelicia');    
+
+    const daysInMonth = new Date(currentYear,currentMonth + 1,0).getDate();
+    const firstDayOfMonth = new Date(currentYear,currentMonth,1).getDay() ;
+    
+    const prevMonth = () => {
+        setCurrentMonth((prevMonth) => (prevMonth === 0 ? 11 : prevMonth - 1) )
+        setCurrentYear((prevYear) => (currentMonth === 0 ? prevYear - 1 : prevYear))
+    }
+
+    const nextMonth = () => {
+        setCurrentMonth((nextMonth) => (nextMonth === 11 ? 0 : nextMonth + 1))
+        setCurrentYear((nextYear) => (currentMonth === 11 ? nextYear + 1 : nextYear))
+    }
+
+    const handleDayClick = (day) =>{
+        const clickDate = new Date(currentYear, currentMonth, day);
+        const today = new Date();
+
+        if(clickDate >= today || isSameDay(clickDate, today)){
+            setSelectedDate(clickDate);
+            setShowEventPopup(true);
+            setEventText("Arendamento Strelicia");
+            setEventDays({day1 : clickDate.getDay(),day2 : '00'});
+        }
+    }
+
+    const isSameDay = (date1, date2) => {
+        return(
+            date1.getFullYear() === date2.getFullYear() && 
+            date1.getMonth() === date2.getMonth() &&
+            date1.getDay() === date2.getDay()
+        )
+    }
+
+    const handleEventSubmit = () => {
+        const newEvent = {
+            date: selectedDate,
+            time: `${eventDays.day1.padStart(2,'0')}:${eventDays.day2.padStart(2,'0')}`,
+            text: eventText,
+        }
+
+        setEvents([...events, newEvent])
+        setEventDays({day1 : selectedDate.getDay(), day2 : '00'})
+        setEventText("Arendamento Strelicia")
+        setShowEventPopup(false)
+    }
+
   return (
+    <div className='background'>
     <div className='container'>
         <div className='calender-app'>
             <div className='calendar'>
                 <h1 className='heading'>Calendar</h1>
 
                 <div className='navigate-date'>
-                    <h2 className='month'>Agosto,</h2>
-                    <h2 className='year'>2025</h2>
+                    <h2 className='month'>{monthsOfYear[currentMonth]}</h2>
+                    <h2 className='year'>{currentYear}</h2>
                     <div className='buttons'>
-                        <i class="fa fa-arrow-left" ></i>
-                        <i class="fa fa-arrow-right" ></i>
+                        <i class="fa fa-arrow-left" onClick={prevMonth}></i>
+                        <i class="fa fa-arrow-right" onClick={nextMonth}></i>
                     </div>
                 </div>
                 <div className='weekdays'>
-                    <span>Seg</span>
-                    <span>Ter</span>
-                    <span>Qua</span>
-                    <span>Qui</span>
-                    <span>Sex</span>
-                    <span>Sáb</span>
-                    <span>Dom</span>
+                    {daysOfWeek.map((day) => <span key={day}>{day}</span>)}
                 </div>
                 <div className='days'>
-                    <span>1</span>
-                    <span>2</span>
-                    <span>3</span>
-                    <span>4</span>
-                    <span className='current-date'>5</span>
-                    <span>6</span>
-                    <span>7</span>
-                    <span>8</span>
-                    <span>9</span>
-                    <span>10</span>
-                    <span>11</span>
-                    <span>12</span>
-                    <span>13</span>
-                    <span>14</span>
-                    <span>15</span>
-                    <span>16</span>
-                    <span>17</span>
-                    <span>18</span>
-                    <span>19</span>
-                    <span>20</span>
-                    <span>21</span>
-                    <span>22</span>
-                    <span>23</span>
-                    <span>24</span>
-                    <span>25</span>
-                    <span>26</span>
-                    <span>27</span>
-                    <span>28</span>
-                    <span>29</span>
-                    <span>30</span>
-                    <span>31</span>
+                    {[...Array(firstDayOfMonth !== 0 ? (firstDayOfMonth-1) : (firstDayOfMonth+6) ).keys()].map((_,index) => 
+                        (<span key={`empty-${index}`}/>))}
+
+                    {[...Array(daysInMonth).keys()].map((day) =>
+                         (<span key={day + 1} className={day +1 === currentDate.getDate() 
+                         && currentMonth === currentDate.getMonth() 
+                         && currentYear === currentDate.getFullYear() ? 'current-date' : ''}
+                            onClick={() => handleDayClick(day + 1)}
+                         >
+                            {day + 1}</span>))}
                 </div>
             </div>
             <div className='events'>
+                {showEventPopup && 
                 <div className='event-popup'>
                     <div className='time-input'>
                         <div className='event-popup-time'>Dias</div>
-                        <input type='number' name='days' min={1} max={31} className='days' />
-                        <input type='number' name='days' min={1} max={31} className='days'/>
+                        <input type='number' name='day1' min={1} max={31} className='day1' value={eventDays.day1} onChange={(e) => setEventDays({...eventDays, day1 : e.target.value })}/>
+                        <input type='number' name='day2' min={1} max={31} className='day2' value={eventDays.day2} onChange={(e) => setEventDays({...eventDays, day2 : e.target.value })}/>
                     </div>
-                    <button className='event-popup-btn'>Alugar</button>
-                    <button className='close-event-popup'><i class="fa-solid fa-x"></i></button>
+                    <button className='event-popup-btn' onClick={handleEventSubmit}>Arrendar</button>
+                    <button className='close-event-popup'><i class="fa-solid fa-x" onClick={() => setShowEventPopup(false)}></i></button>
                 </div>
-                <div className='event'>
+                }
+
+                {events.map((event, index) => (
+                    <div className='event' key={index}>
                     <div className='event-date-wrapper'>
-                        <div className='event-date'>7 Agosto, 2025</div>
+                        <div className='event-date'>{`${monthsOfYear[event.date.getMonth()]} ${event.date.getDate()}, ${event.date.getFullYear()}`}</div>
                         <div className='event-time'>15:00</div>
                     </div>
-                    <div className='event-text'>Aluger da Strelicia</div>
+                    <div className='event-text'>Arrendar a Strelicia</div>
                     <div className='event-buttons'>
                        <i class="fa-solid fa-x"></i>
                     </div>
                 </div>
+                )
+                )}
             </div>
         </div>
+    </div>
     </div>
   )
 }
