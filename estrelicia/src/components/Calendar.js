@@ -2,126 +2,176 @@ import React, { useState } from 'react'
 import './Calendar.css'
 
 const Calendar = () => {
-    const daysOfWeek = ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
-    const monthsOfYear = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-    const currentDate = new Date();
-    const[currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
-    const[currentYear, setCurrentYear] = useState(currentDate.getFullYear());
-    const[selectedDate, setSelectedDate] = useState(currentDate);
-    const[showEventPopup, setShowEventPopup] = useState(false);
+  const monthsOfYear = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const current = new Date();
 
-    const[events, setEvents] = useState([]);
-    const[eventDays, setEventDays] = useState({day1 : '00', day2 : '00'});
-    const[eventText, setEventText] = useState('Arendamento Strelicia');    
+  const [month, setMonth] = useState(current.getMonth());
+  const [year, setYear] = useState(current.getFullYear());
 
-    const daysInMonth = new Date(currentYear,currentMonth + 1,0).getDate();
-    const firstDayOfMonth = new Date(currentYear,currentMonth,1).getDay() ;
-    
-    const prevMonth = () => {
-        setCurrentMonth((prevMonth) => (prevMonth === 0 ? 11 : prevMonth - 1) )
-        setCurrentYear((prevYear) => (currentMonth === 0 ? prevYear - 1 : prevYear))
+  const [range, setRange] = useState({ start: null, end: null });
+  const [bookings, setBookings] = useState([]);
+
+  //temp
+  const [blockedDates] = useState([
+    new Date(year, month, 20),
+    new Date(year, month, 21),
+    new Date(year, month, 22),
+  ]);
+  //temp
+
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const firstWeekday = new Date(year, month, 1).getDay();
+
+  const isToday = (date) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date.toDateString() === today.toDateString();
+  };
+
+  const isBlocked = (d) => blockedDates.some(b => b.toDateString() === d.toDateString());
+
+  const hasBlockedBetween = (start, end) => {
+    return blockedDates.some(d => d > start && d < end);
+  };
+
+const isPast = (date) => {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  return date < today;
+};
+
+  const handleClick = (day) => {
+  const clicked = new Date(year, month, day);
+
+  if (isBlocked(clicked)) return;
+
+  if (range.start && !range.end &&
+      range.start.toDateString() === clicked.toDateString()) {
+    setRange({ start: null, end: null });
+    return;
+  }
+
+  if (!range.start) {
+    setRange({ start: clicked, end: null });
+    return;
+  }
+
+  if (range.start && !range.end) {
+    if (clicked <= range.start) {
+      setRange({ start: clicked, end: null });
+      return;
     }
 
-    const nextMonth = () => {
-        setCurrentMonth((nextMonth) => (nextMonth === 11 ? 0 : nextMonth + 1))
-        setCurrentYear((nextYear) => (currentMonth === 11 ? nextYear + 1 : nextYear))
+    if (hasBlockedBetween(range.start, clicked)) {
+      return;
     }
 
-    const handleDayClick = (day) =>{
-        const clickDate = new Date(currentYear, currentMonth, day);
-        const today = new Date();
+    setRange(prev => ({ ...prev, end: clicked }));
+    return;
+  }
+  setRange({ start: clicked, end: null });
+};
 
-        if(clickDate >= today || isSameDay(clickDate, today)){
-            setSelectedDate(clickDate);
-            setShowEventPopup(true);
-            setEventText("Arendamento Strelicia");
-            setEventDays({day1 : clickDate.getDay(),day2 : '00'});
-        }
-    }
 
-    const isSameDay = (date1, date2) => {
-        return(
-            date1.getFullYear() === date2.getFullYear() && 
-            date1.getMonth() === date2.getMonth() &&
-            date1.getDay() === date2.getDay()
-        )
-    }
+  const saveBooking = () => {
+    if (!range.start || !range.end) return;
 
-    const handleEventSubmit = () => {
-        const newEvent = {
-            date: selectedDate,
-            time: `${eventDays.day1.padStart(2,'0')}:${eventDays.day2.padStart(2,'0')}`,
-            text: eventText,
-        }
+    const newBooking = { start: range.start, end: range.end };
+    setBookings(prev => [...prev, newBooking]);
+    setRange({ start: null, end: null });
+  };
 
-        setEvents([...events, newEvent])
-        setEventDays({day1 : selectedDate.getDay(), day2 : '00'})
-        setEventText("Arendamento Strelicia")
-        setShowEventPopup(false)
-    }
+  const removeBooking = (i) => {
+    setBookings(prev => prev.filter((_, idx) => idx !== i));
+  };
+
+  const inRange = (d) => {
+    if (!range.start || !range.end) return false;
+    return d > range.start && d < range.end;
+  };
+
+  const prevMonth = () => {
+    setMonth(m => (m === 0 ? 11 : m - 1));
+    setYear(y => (month === 0 ? y - 1 : y));
+  };
+
+  const nextMonth = () => {
+    setMonth(m => (m === 11 ? 0 : m + 1));
+    setYear(y => (month === 11 ? y + 1 : y));
+  };
 
   return (
-    <div className='background'>
-    <div className='container'>
-        <div className='calender-app'>
-            <div className='calendar'>
-                <h1 className='heading'>Calendar</h1>
+    <div className="background">
+      <div className="container">
+        <div className="calender-app">
+          <div className="calendar">
+            <h1 className="heading">Calendar</h1>
 
-                <div className='navigate-date'>
-                    <h2 className='month'>{monthsOfYear[currentMonth]}</h2>
-                    <h2 className='year'>{currentYear}</h2>
-                    <div className='buttons'>
-                        <i class="fa fa-arrow-left" onClick={prevMonth}></i>
-                        <i class="fa fa-arrow-right" onClick={nextMonth}></i>
-                    </div>
-                </div>
-                <div className='weekdays'>
-                    {daysOfWeek.map((day) => <span key={day}>{day}</span>)}
-                </div>
-                <div className='days'>
-                    {[...Array(firstDayOfMonth !== 0 ? (firstDayOfMonth-1) : (firstDayOfMonth+6) ).keys()].map((_,index) => 
-                        (<span key={`empty-${index}`}/>))}
-
-                    {[...Array(daysInMonth).keys()].map((day) =>
-                         (<span key={day + 1} className={day +1 === currentDate.getDate() 
-                         && currentMonth === currentDate.getMonth() 
-                         && currentYear === currentDate.getFullYear() ? 'current-date' : ''}
-                            onClick={() => handleDayClick(day + 1)}
-                         >
-                            {day + 1}</span>))}
-                </div>
+            <div className="navigate-date">
+              <h2 className="month">{monthsOfYear[month]}</h2>
+              <h2 className="year">{year}</h2>
+              <div className="buttons">
+                <i className="fa fa-arrow-left" onClick={prevMonth}></i>
+                <i className="fa fa-arrow-right" onClick={nextMonth}></i>
+              </div>
             </div>
-            <div className='events'>
-                {showEventPopup && 
-                <div className='event-popup'>
-                    <div className='time-input'>
-                        <div className='event-popup-time'>Dias</div>
-                        <input type='number' name='day1' min={1} max={31} className='day1' value={eventDays.day1} onChange={(e) => setEventDays({...eventDays, day1 : e.target.value })}/>
-                        <input type='number' name='day2' min={1} max={31} className='day2' value={eventDays.day2} onChange={(e) => setEventDays({...eventDays, day2 : e.target.value })}/>
-                    </div>
-                    <button className='event-popup-btn' onClick={handleEventSubmit}>Arrendar</button>
-                    <button className='close-event-popup'><i class="fa-solid fa-x" onClick={() => setShowEventPopup(false)}></i></button>
-                </div>
-                }
 
-                {events.map((event, index) => (
-                    <div className='event' key={index}>
-                    <div className='event-date-wrapper'>
-                        <div className='event-date'>{`${monthsOfYear[event.date.getMonth()]} ${event.date.getDate()}, ${event.date.getFullYear()}`}</div>
-                        <div className='event-time'>15:00</div>
-                    </div>
-                    <div className='event-text'>Arrendar a Strelicia</div>
-                    <div className='event-buttons'>
-                       <i class="fa-solid fa-x"></i>
-                    </div>
-                </div>
-                )
-                )}
+            <div className="days">
+              {[...Array((firstWeekday + 6) % 7).keys()].map(i => (
+                <span key={"e"+i}></span>
+              ))}
+
+              {[...Array(daysInMonth).keys()].map(i => {
+                const day = i + 1;
+                const d = new Date(year, month, day);
+
+                const classes = [];
+                  if (isToday(d)) classes.push("today");
+
+                  if (isPast(d)) classes.push("past");
+
+                  if (isBlocked(d)) classes.push("blocked");
+
+                  if (range.start?.toDateString() === d.toDateString())
+                    classes.push("selected-start");
+
+                  if (range.end?.toDateString() === d.toDateString())
+                    classes.push("selected-end");
+
+                  if (inRange(d))
+                    classes.push("selected-range");
+
+
+                return (
+                  <span key={day} className={classes.join(" ")} onClick={() => handleClick(day)}>
+                    {day}
+                  </span>
+                );
+              })}
             </div>
+
+            {range.start && range.end && (
+              <button className="event-popup-btn mt-4" onClick={saveBooking}>
+                Confirmar
+              </button>
+            )}
+          </div>
+
+          <div className="events">
+            <h2 className="heading text-xl mb-4">Current Bookings</h2>
+            {bookings.map((b, i) => (
+              <div className="event flex justify-between items-center" key={i}>
+                <div className="event-text">
+                  {b.start.toLocaleDateString()} → {b.end.toLocaleDateString()}
+                </div>
+                <button onClick={() => removeBooking(i)} className="event-popup-btn">Remover</button>
+              </div>
+            ))}
+          </div>
         </div>
+      </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default Calendar
+export default Calendar;

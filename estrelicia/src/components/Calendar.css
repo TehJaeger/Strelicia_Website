@@ -118,6 +118,12 @@
 
 }
 
+.days span.past,
+.days span.blocked {
+  color: rgba(255, 255, 255, 0.35);
+  cursor: not-allowed;
+}
+
 .current-date{
     background-color: rgb(22, 180, 219);
     border-radius: 50%;
@@ -129,7 +135,7 @@
     height: 100%;
     padding: 2rem 0;
 }
- .event-popup{
+.event-popup{
     position: absolute;
     top: 30%;
     left: 2rem;
@@ -143,14 +149,14 @@
     justify-content: center;
     align-items: center;
     row-gap: 1rem;
- }
+}
 
- .time-input{
+.time-input{
     display: flex;
     column-gap: .8rem;
- }
+}
 
- .event-popup-time{
+.event-popup-time{
     width: clamp(3rem, 4cqi, 5rem);
     color: white;
     font-size: clamp(1rem, 1.5cqi, 2rem);
@@ -160,9 +166,9 @@
     box-shadow: 0 0 1rem rgba(192, 151, 110, 0.2);
     letter-spacing: .1rem;
     padding-right: 3rem;
- }
+}
 
- .time-input input{
+.time-input input{
     background-color: transparent;
     border: none;
     border-top: .1rem solid white;
@@ -174,22 +180,23 @@
     align-items: center;
     font-size: clamp(1rem, 1.5cqi, 1.5rem);
     user-select: none;
- }
-  .time-input input:focus{
+}
+ 
+.time-input input:focus{
     outline: none;
-  }
+}
 
 .event-popup-btn{
     width: clamp(12rem, 15cqi, 20rem);
-    height: 3rem;
+    height: 5rem;
+    margin-left: 5rem;
     background-color:rgb(192, 151, 110);
-    color: white-;
+    color: white;
     font-size: clamp(.5rem, 1.2cqi,1.5rem);
     letter-spacing: .1rem;
     border: none;
     box-shadow: 0 0 1.3rem, rgba(0, 0, 0, 0.5);
     cursor: pointer;
-
 }
 
 .event-popup-btn:active{
@@ -206,19 +213,19 @@
     cursor: pointer;
 }
 
+
 .close-event-popup i{
     font-size: 1.5rem;
     color: white;
 }
 
 
- .time-input input[type = "number"]::-webkit-inner-spin-button{
+.time-input input[type = "number"]::-webkit-inner-spin-button{
     appearance: none;
- }
+}
 
 
-
- .event{
+.event{
     width: 100%;
     height: 5rem;
     background-color:rgb(163,132,101);
@@ -228,38 +235,38 @@
     align-items: center;
     margin-bottom: 2rem;
     position: relative;
- }
+}
 
- .event-date-wrapper{
+.event-date-wrapper{
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 25%;
     border-right: .1rem solid rgba(0, 0, 0, 0.5);
- }
+}
 
- .event-date{
+.event-date{
     font-size: clap(.8rem, 1cqi, 1.2rem);
     color: white;
     line-height: 2rem;
     font-weight: bold;
- }
+}
 
- .event-time{
+.event-time{
     font-size: clap(.8rem, 1cqi, 1.2rem);
     color: white;
- }
+}
 
- .event-text {
+.event-text {
    font-size: clap(.8rem, 1cqi, 1.2rem);
     color: white;
     line-height: 1rem;
     width: 75%;
     padding: 0 1.5rem 0 .8rem;
     overflow-wrap: break-word;
- }
+}
 
- .event-buttons{
+.event-buttons{
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -269,4 +276,36 @@
     color: white;
     font-size: 1rem;
     cursor: pointer;
- }
+}
+
+.days span.today {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+  text-decoration-thickness: 0.15rem;
+}
+
+.blocked {
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+  background: none;
+  text-shadow: none;
+}
+
+.past {
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+  background: none;
+  text-shadow: none;
+}
+
+
+.selected-start,
+.selected-end {
+  background-color: rgba(41, 153, 161, 0.733);
+  border-radius: 50%;
+}
+
+.selected-range {
+  background-color: rgba(4, 34, 68, 0.25);
+  border-radius: 50%;
+}
