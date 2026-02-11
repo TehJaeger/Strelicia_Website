@@ -8,7 +8,7 @@
 
 .container{
     width: 100%;
-    height: 100vh;
+    height: 80vh;
     background-color:  rgb(192, 151, 110);
     display: grid;
     place-items: center;
@@ -16,7 +16,7 @@
 }
 
 .calender-app{
-    width: 60%;
+    width: 40%;
     min-width: 90vmin;
     aspect-ratio: 3/2;
     background-color: rgb(192, 151, 110);
@@ -24,6 +24,8 @@
     border-radius: 1rem;
     border: 0.15rem solid black;
     display: flex;
+    justify-content: center;
+    align-items: center;
     column-gap: 3rem;
     position: relative;
     transform-style: preserve-3d;
@@ -43,7 +45,8 @@
 }
 
 .calender{
-    width: 40%;
+    width: 100%;
+    max-width: 40rem;
 }
 
 .heading{
@@ -71,6 +74,7 @@
     column-gap: 0.5rem;
     margin-left: auto;
 }
+
 .buttons i{
     width: 2rem;
     height: 2rem;
@@ -100,14 +104,17 @@
     justify-content: center;
 }
 
-.days{
-    display: flex;
-    flex-wrap: wrap;
+.days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr); 
+  gap: 0;
+  height: 30rem;
 }
 
 .days span{
-    font-size: clamp(0.8rem, 1cqi,1.2rem);
-    width: calc(100%/7);
+    height: 100%;
+    width: 100%;
     aspect-ratio: 1;
     display: flex;
     justify-content: center;
@@ -130,69 +137,13 @@
     box-shadow:  0 0 0.1rem 0.4rem rgba(20, 170, 210, .3);
 }
 
-.events{
-    width: 60%;
-    height: 100%;
-    padding: 2rem 0;
-}
-.event-popup{
-    position: absolute;
-    top: 30%;
-    left: 2rem;
-    background-color:  rgb(163,132,101);
-    width: clamp(30rem, 25cqi, 40rem);
-    aspect-ratio: 10/9;
-    border-radius: .8rem;
-    box-shadow: 0 0,8rem 1rem rgba(0,0 , 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    row-gap: 1rem;
-}
-
-.time-input{
-    display: flex;
-    column-gap: .8rem;
-}
-
-.event-popup-time{
-    width: clamp(3rem, 4cqi, 5rem);
-    color: white;
-    font-size: clamp(1rem, 1.5cqi, 2rem);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 1rem rgba(192, 151, 110, 0.2);
-    letter-spacing: .1rem;
-    padding-right: 3rem;
-}
-
-.time-input input{
-    background-color: transparent;
-    border: none;
-    border-top: .1rem solid white;
-    border-bottom: .1rem solid white;
-    color: white;
-    width: clamp(3rem, 4cqi, 5rem);
-    height: 2rem;
-    text-align: center;
-    align-items: center;
-    font-size: clamp(1rem, 1.5cqi, 1.5rem);
-    user-select: none;
-}
- 
-.time-input input:focus{
-    outline: none;
-}
-
 .event-popup-btn{
     width: clamp(12rem, 15cqi, 20rem);
-    height: 5rem;
-    margin-left: 5rem;
+    margin: 1rem auto;
+    display: block;
     background-color:rgb(192, 151, 110);
     color: white;
-    font-size: clamp(.5rem, 1.2cqi,1.5rem);
+    font-size: clamp(1rem, 1.5cqi,1.5rem);
     letter-spacing: .1rem;
     border: none;
     box-shadow: 0 0 1.3rem, rgba(0, 0, 0, 0.5);
@@ -201,82 +152,13 @@
 
 .event-popup-btn:active{
     transform: translate(0.1rem);
-    top: 1rem
-}
-
-.close-event-popup{
-    position: absolute;
     top: 1rem;
-    right: 1rem;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
 }
-
-
-.close-event-popup i{
-    font-size: 1.5rem;
-    color: white;
-}
-
 
 .time-input input[type = "number"]::-webkit-inner-spin-button{
     appearance: none;
 }
 
-
-.event{
-    width: 100%;
-    height: 5rem;
-    background-color:rgb(163,132,101);
-    padding: 1rem 0;
-    border: flex;
-    display: flex;
-    align-items: center;
-    margin-bottom: 2rem;
-    position: relative;
-}
-
-.event-date-wrapper{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 25%;
-    border-right: .1rem solid rgba(0, 0, 0, 0.5);
-}
-
-.event-date{
-    font-size: clap(.8rem, 1cqi, 1.2rem);
-    color: white;
-    line-height: 2rem;
-    font-weight: bold;
-}
-
-.event-time{
-    font-size: clap(.8rem, 1cqi, 1.2rem);
-    color: white;
-}
-
-.event-text {
-   font-size: clap(.8rem, 1cqi, 1.2rem);
-    color: white;
-    line-height: 1rem;
-    width: 75%;
-    padding: 0 1.5rem 0 .8rem;
-    overflow-wrap: break-word;
-}
-
-.event-buttons{
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: .8rem;
-    display: flex;
-    flex-direction: column;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-}
 
 .days span.today {
   text-decoration: underline;
@@ -308,4 +190,47 @@
 .selected-range {
   background-color: rgba(4, 34, 68, 0.25);
   border-radius: 50%;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup {
+  background: rgb(192, 151, 110);
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  box-shadow: 0 0 2rem rgba(0,0,0,0.5);
+}
+
+.popup-icons {
+  display: flex;
+  justify-content: center;
+  gap: 5rem;
+  margin: 1.5rem 0;
+}
+
+.popup-icons i {
+  font-size: 5rem;
+  color: white;
+  cursor: pointer;
+}
+
+.popup-icons i:hover {
+  transform: scale(1.1);
+}
+
+.prices {
+  margin-left: 6rem;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: white;
+  letter-spacing: 0.05rem;
 }

@@ -49,11 +49,6 @@ function Navbar() {
                         </Link>
                     </li>
                     <li className='nav-item'>
-                        <Link to ='/Rent' className='nav-links' onClick={closeMobileMenu}>
-                            Rent
-                        </Link>
-                    </li>
-                    <li className='nav-item'>
                         <a className='nav-links' href="https://drive.google.com/file/d/1KYuK4iDIww87NqKzCzXbZd-FILB7eR9Z/view" target="_blank" rel="noopener noreferrer">
                             Info
                         </a>

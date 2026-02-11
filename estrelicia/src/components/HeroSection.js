@@ -11,7 +11,7 @@ function HeroSection() {
         <h1>Novas Experiências</h1>
         <p>Momentos inesquecíveis</p>
         <div className='hero-btns'>
-            <Link to='/Rent'>
+            <Link to='/Calender'>
             <Button className='btns' buttonStyle='btn--outline' buttonSize='btn--large'>
                 Alugar
             </Button>
