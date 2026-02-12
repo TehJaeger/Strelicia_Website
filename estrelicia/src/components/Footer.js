@@ -16,7 +16,6 @@ function Footer() {
         <div className='footer-links-wrapper'>
             <div className='footer-links-items'>
                 <h2>About Us</h2>
-                <Link to='/sign-up'>Como funciona</Link>
                 <a href={"https://share.google/XD2q2k9MFIRy9Z8YB"} target="_blank" rel="noopener noreferrer">Reviews</a>
             </div>
             <div className='footer-links-items'>
@@ -30,8 +29,6 @@ function Footer() {
                 <h2>Social Media</h2>
                 <a href={"https://www.instagram.com/streliciahouse/"} target="_blank" rel="noopener noreferrer">Instagram</a>
                 <a href={"https://www.youtube.com/@rievolutioncycling6178"} target="_blank" rel="noopener noreferrer">Youtube</a>
-                <a href={"https://www.youtube.com/@rievolutioncycling6178"} target="_blank" rel="noopener noreferrer">Facebook</a>
-                <a href={"https://www.youtube.com/@rievolutioncycling6178"} target="_blank" rel="noopener noreferrer">Twitter</a>
             </div>
             </div>
         </div>
@@ -49,12 +46,6 @@ function Footer() {
                 </a>
                 <a className='social-icon-link Youtube' href={"https://www.youtube.com/@rievolutioncycling6178"} target="_blank" rel="noopener noreferrer">
                 <i className='fab fa-youtube'/>
-                </a>
-                <a className='social-icon-link Facebook' href={"https://www.youtube.com/@rievolutioncycling6178"} target="_blank" rel="noopener noreferrer">    
-                <i className='fab fa-facebook-f'/>
-                </a>
-                <a className='social-icon-link Twitter' href={"https://www.youtube.com/@rievolutioncycling6178"} target="_blank" rel="noopener noreferrer">   
-                <i className='fab fa-twitter'/>
                 </a>
             </div>
         </div>

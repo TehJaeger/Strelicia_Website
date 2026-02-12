@@ -240,7 +240,7 @@ return (
               <h2>Contactos</h2>
             <div className="popup-icons">
               <a
-                href={`https://wa.me/351925283680?text=${encodeURIComponent(buildWhatsAppMessage())}`}
+                href={`https://wa.me/351999999999?text=${encodeURIComponent(buildWhatsAppMessage())}`}
                 target="_blank"
                 rel="noopener noreferrer">
                 <i className="fa fa-whatsapp"></i>
