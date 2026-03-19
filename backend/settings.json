@@ -1,0 +1,8 @@
+{
+  "pricePerNight": 179,
+  "showPrice": true,
+  "popup": {
+    "enabled": true,
+    "image": "popup.jpg"
+  }
+}

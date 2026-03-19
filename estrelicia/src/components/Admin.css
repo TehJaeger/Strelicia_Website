@@ -1,0 +1,265 @@
+.admin-firstcontainer {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url("http://localhost:3001/images/Img6.png") center/cover no-repeat;
+}
+
+.admin-wrapper {
+  width: 420px;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(30px);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,.2);
+  color: white;
+}
+
+.admin-form-box {
+  padding: 40px;
+}
+
+.admin-form-box h1 {
+  font-size: 36px;
+  text-align: center;
+}
+
+.admin-input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
+
+.admin-input-box input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 2px solid rgba(255,255,255,1);
+  border-radius: 40px;
+  outline: none;
+  font-size: 16px;
+  color: white;
+  padding: 20px 45px 20px 20px;
+}
+
+.admin-input-box input::placeholder {
+  color: white;
+}
+
+.admin-input-box i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.admin-form-box button {
+  width: 100%;
+  height: 45px;
+  background: white;
+  border: none;
+  border-radius: 40px;
+  font-size: 16px;
+  font-weight: 700;
+  color: black;
+  cursor: pointer;
+}
+
+.admin-form-box button:hover {
+  opacity: 0.9;
+}
+
+.admin-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 50px 20px 100px;
+}
+
+.admin-container h1 {
+  text-align: center;
+  font-size: 48px;
+  margin-bottom: 50px;
+  font-weight: 500;
+}
+
+
+.admin-section {
+  background: #ffffff;
+  padding: 35px;
+  margin-bottom: 45px;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.admin-section h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+
+.price-section {
+  text-align: center;
+}
+
+.price-section input {
+  width: 120px;
+  padding: 8px 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-right: 10px;
+}
+
+.price-section button {
+  padding: 8px 18px;
+  background: #a38465;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.price-section button:hover {
+  background: #8f7154;
+}
+
+
+.popup-section {
+  text-align: center;
+}
+
+
+.popup-section .admin-card {
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+
+.popup-section .admin-preview {
+  height: 220px;
+  border-radius: 12px;
+}
+
+.popup-section .admin-preview img,
+.popup-section .admin-preview video {
+  object-fit: cover;
+}
+
+.popup-section img {
+  width: 100%;
+  max-width: 500px;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.popup-section input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.popup-section input[type="file"] {
+  margin: 15px 0;
+}
+
+.popup-section button {
+  padding: 10px 24px;
+  background: #a38465;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.popup-section button:hover {
+  background: #8f7154;
+}
+
+.admin_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  margin-top: 25px;
+}
+
+.admin-card {
+  display: flex;
+  flex-direction: column;
+  background: #f9f9f9;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.admin-preview {
+  position: relative;
+  width: 100%;
+  height: 150px;
+  background: #ddd;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.admin-preview img,
+.admin-preview video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+.admin-controls {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-controls input {
+  font-size: 13px;
+}
+
+.admin-controls button {
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: #a38465;
+  color: white;
+  cursor: pointer;
+}
+
+.admin-section button {
+  padding: 10px 22px;
+  background: #a38465;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.admin-section button:hover {
+  background: #8f7154;
+}
+
+@media (max-width: 768px) {
+  .admin-container h1 {
+    font-size: 34px;
+  }
+
+  .admin-section {
+    padding: 25px;
+  }
+
+  .popup-section img {
+    height: 180px;
+  }
+}

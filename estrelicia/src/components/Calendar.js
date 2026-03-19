@@ -3,9 +3,9 @@ import './Calendar.css'
 
 const Calendar = () => {
   const monthsOfYear = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-  const pricePerNigth = 179;
   const current = new Date();
   const MIN_NIGHTS = 2;
+
 
   const [month, setMonth] = useState(current.getMonth());
   const [year, setYear] = useState(current.getFullYear());
@@ -16,21 +16,35 @@ const Calendar = () => {
 
   const [blockedDates, setBlockedDates] = useState([]);
 
+  const [warningDate, setWarningDate] = useState(null);
+
+  const [pricePerNight, setPricePerNight] = useState(0);
+  const [showPrice, setShowPrice] = useState(true);
+
   const isokHour = () => {
   const now = new Date();
 
   const hour = now.getUTCHours(); 
   return hour >= 12;
-};
+  };
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const firstWeekday = new Date(year, month, 1).getDay();
+  const firstWeekday = (new Date(year, month, 1).getDay() + 6) % 7;
 
   const isToday = (date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return date.toDateString() === today.toDateString();
   };
+
+useEffect(() => {
+  fetch("http://localhost:3001/settings")
+    .then(res => res.json())
+    .then(data => {
+      setPricePerNight(data.pricePerNight);
+      setShowPrice(data.showPrice);
+    });
+}, []);
 
 
   useEffect(() => {
@@ -40,9 +54,8 @@ const Calendar = () => {
       const data = await res.json();
 
       const dates = data.map(d => {
-        const date = new Date(d);
-        date.setHours(0, 0, 0, 0);
-        return date;
+        const [year, month, day] = d.split("-").map(Number);
+        return new Date(year, month - 1, day);
       });
 
       setBlockedDates(dates);
@@ -80,6 +93,7 @@ const isPast = (date) => {
 
   const handleClick = (day) => {
   const clicked = new Date(year, month, day);
+  clicked.setHours(0,0,0,0);
 
   if (isBlocked(clicked) || isPast(clicked)) return;
 
@@ -109,7 +123,13 @@ const isPast = (date) => {
   }
 
   if (nightsBetween(range.start, clicked) < MIN_NIGHTS) {
-    return;
+  setWarningDate(clicked);
+
+  setTimeout(() => {
+    setWarningDate(null);
+  }, 2000);
+
+  return;
   }
 
   if (hasBlockedBetween(range.start, clicked)) {
@@ -136,8 +156,20 @@ const isPast = (date) => {
   };
 
   const nightsBetween = (start, end) => {
-  return (end - start) / (1000 * 60 * 60 * 24);
-  };
+  const startUTC = Date.UTC(
+    start.getFullYear(),
+    start.getMonth(),
+    start.getDate()
+  );
+
+  const endUTC = Date.UTC(
+    end.getFullYear(),
+    end.getMonth(),
+    end.getDate()
+  );
+
+  return Math.round((endUTC - startUTC) / (1000 * 60 * 60 * 24));
+};
 
   const getNumberOfNights = () => {
     if (!range.start || !range.end) return 0;
@@ -145,21 +177,24 @@ const isPast = (date) => {
   };
 
   const getTotalPrice = () => {
-    return getNumberOfNights() * pricePerNigth;
+    return getNumberOfNights() * pricePerNight;
   };
 
 
   const buildWhatsAppMessage = () => {
   if (!range.start || !range.end) return "";
 
-  const start = range.start.toLocaleDateString("pt-PT");
-  const end = range.end.toLocaleDateString("pt-PT");
+    const start = range.start.toLocaleDateString("pt-PT");
+    const end = range.end.toLocaleDateString("pt-PT");
+    const days = nightsBetween(range.start, range.end);
 
-  const days =nightsBetween(range.start, range.end)
+    if (!showPrice) {
+      return `Olá. Gostaria de reservar a casa por ${days} noites, de ${start} a ${end}.`;
+    }
 
-  const price = pricePerNigth * (days);
+    const price = pricePerNight * days;
 
-  return `Olá! Gostaria de reservar a casa por ${days} noites, de ${start} a ${end}. pelo preço de ${price}`;
+    return `Olá. Gostaria de reservar a casa por ${days} noites, de ${start} a ${end}, pelo preço de ${price}€`;
   };
 
 return (
@@ -167,7 +202,7 @@ return (
     <div className="container">
       <div className="calender-app">
         <div className="calendar">
-          <h1 className="heading">Calendar</h1>
+          <h1 className="heading">Calendário</h1>
 
           <div className="navigate-date">
             <h2 className="month">{monthsOfYear[month]}</h2>
@@ -178,9 +213,19 @@ return (
             </div>
           </div>
 
+          <div className="weekdays">
+              <span>Seg</span>
+              <span>Ter</span>
+              <span>Qua</span>
+              <span>Qui</span>
+              <span>Sex</span>
+              <span>Sáb</span>
+              <span>Dom</span>
+          </div>
+
           <div className="days">
           {
-            [...Array((firstWeekday + 6) % 7).keys()].map(i => (
+            [...Array(firstWeekday).keys()].map(i => (
               <span key={"e"+i}></span>))
             }
 
@@ -188,6 +233,7 @@ return (
               [...Array(daysInMonth).keys()].map(i => {
               const day = i + 1;
               const d = new Date(year, month, day);
+              d.setHours(0,0,0,0);
 
               const classes = [];
                 if (isToday(d)) classes.push("today");
@@ -204,33 +250,47 @@ return (
 
                 if (inRange(d))
                   classes.push("selected-range");
+                if (warningDate?.toDateString() === d.toDateString())
+                  classes.push("warning-day");
 
                   return (
-                    <span key={day} className={classes.join(" ")} onClick={() => handleClick(day)}>
+                    <span
+                      key={day}
+                      className={classes.join(" ")}
+                      onClick={() => handleClick(day)}
+                    >
                       {day}
+
+                      {warningDate?.toDateString() === d.toDateString() && (
+                        <div className="min-warning">
+                          Mínimo 2 noites
+                        </div>
+                      )}
                     </span>
-                );
+                  );
               }
             )
           }
           </div>
 
             {range.start && range.end && (
-            <>
-              <p className="prices">
-                Total é <strong>{getTotalPrice()}€</strong>{" "}
-                (<strong>{pricePerNigth}€</strong> por noite ×{" "}
-                <strong>{getNumberOfNights()}</strong> noites)
-              </p>
+              <>
+                {showPrice && (
+                 <p className="prices">
+                   Total é <strong>{getTotalPrice()}€</strong>{" "}
+                   (<strong>{pricePerNight}€</strong> por noite ×{" "}
+                   <strong>{getNumberOfNights()}</strong> noites)
+                 </p>
+                )}
 
-              <button
-                className="event-popup-btn mt-4"
-                onClick={() => setShowContactPopup(true)}
-              >
-                Fazer a mensagem aqui
-              </button>
-            </>
-          )}
+                <button
+                 className="event-popup-btn mt-4"
+                 onClick={() => setShowContactPopup(true)}
+                >
+                  Fazer a mensagem aqui
+               </button>
+             </>
+            )}
           </div>    
         </div>
 

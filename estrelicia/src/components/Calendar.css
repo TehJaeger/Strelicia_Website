@@ -3,33 +3,30 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('../../public/images/Img3.jpg') center center/cover no-repeat;
+    background: url('http://localhost:3001/images/Img3.jpg') center center/cover no-repeat;
 }
 
 .container{
-    width: 100%;
-    height: 80vh;
-    background-color:  rgb(192, 151, 110);
-    display: grid;
-    place-items: center;
-    perspective: 100rem;
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgb(192,151,110);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
 }
 
-.calender-app{
-    width: 40%;
-    min-width: 50vmin;
-    aspect-ratio: 3/2;
-    background-color:gray;
-    padding: 2rem;
-    border-radius: 0rem;
-    border: 0.15rem solid black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    column-gap: 3rem;
-    position: relative;
-    transform-style: preserve-3d;
-    opacity: 80%;
+.calender-app {
+  width: min(90vw, 700px);
+  min-height: 520px;
+  background-color: gray;
+  padding: clamp(1rem, 2vw, 2rem);
+  border: 0.15rem solid black;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+  opacity: 80%;
 }
 
 .calender-app::after{
@@ -46,23 +43,28 @@
 }
 
 .calender{
-    width: 100%;
-    max-width: 40rem;
+  width: 100%;
+  max-width: 40rem;
+  display:flex;
+  flex-direction:column;
 }
 
 .heading{
-    font-size: clamp(3rem, 3,8cqi, 6rem);
-    color: white;
-    letter-spacing: 0.05rem;
-    padding-left: 0.8rem;
+  color: white;
+  letter-spacing: 0.05rem;
+  padding-left: 0.8rem;
+  font-size: clamp(2rem, 6vw, 4rem);
+  word-break: break-word;
 }
 
 .navigate-date{
-    display: flex;
-    align-items: center;
-    column-gap: 0.5rem;
-    margin: 2.5rem 0;
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:0.5rem;
+  margin:2rem 0;
 }
+
 
 .navigate-date h2{
     font-size: clamp(1rem, 1.5cqi,2rem);
@@ -89,35 +91,33 @@
 }
 
 .weekdays{
-    width: 100%;
-    display: flex;
-    margin: 2rem 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin: 1.5rem 0;
 }
 
 .weekdays span{
-    width: calc(100%/7);
-    font-size: clamp(0.5rem, .8cqi,1rem);
-    font-weight: bold;
-    text-transform: uppercase;
-    color: white;
-    letter-spacing: .1rem;
-    display: flex;
-    justify-content: center;
+  font-size: clamp(0.5rem, .8cqi,1rem);
+  font-weight: bold;
+  text-transform: uppercase;
+  color: white;
+  letter-spacing: .1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  grid-template-rows: repeat(6, 1fr); 
-  gap: 0;
-  height: 30rem;
+  grid-template-rows: repeat(6, 1fr);
+  width: 100%;
 }
 
 .days span{
-    height: 100%;
-    width: 100%;
-    aspect-ratio: 1;
-    font-size: 1.4rem;
+  aspect-ratio: 1;
+  width: 100%;
+  font-size: clamp(0.8rem, 2vw, 1.4rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -236,4 +236,48 @@
   font-size: 1.1rem;
   color: white;
   letter-spacing: 0.05rem;
+}
+
+.warning-day {
+  position: relative;
+}
+
+.min-warning {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #a38465;
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 20;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(5px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@media (max-width: 600px) {
+
+  .heading{
+    font-size: clamp(1.8rem, 8vw, 3rem);
+  }
+
+  .navigate-date{
+    margin: 1.2rem 0;
+  }
+
+  .weekdays span{
+    font-size: 0.75rem;
+  }
+
+  .days span{
+    font-size: clamp(0.8rem, 3.5vw, 1.2rem);
+  }
+
 }

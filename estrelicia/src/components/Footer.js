@@ -28,7 +28,6 @@ function Footer() {
             <div className='footer-links-items'>
                 <h2>Social Media</h2>
                 <a href={"https://www.instagram.com/streliciahouse/"} target="_blank" rel="noopener noreferrer">Instagram</a>
-                <a href={"https://www.youtube.com/@rievolutioncycling6178"} target="_blank" rel="noopener noreferrer">Youtube</a>
             </div>
             </div>
         </div>
@@ -37,19 +36,22 @@ function Footer() {
         <div className='social-media-wrap'>
             <div className='footer-logo'>
                 <Link to='/' className='social-logo'>
-                    <img src="/images/Img1.png" alt="Simbolo" className="navbar-image" />
+                    <img src="http://localhost:3001/images/Img1.png" alt="Simbolo" className="navbar-image" />
                 </Link>
             </div>
             <div className='social-icons'>
                 <a className='social-icon-link Instagram' href={"https://www.instagram.com/streliciahouse/"} target="_blank" rel="noopener noreferrer">
                 <i className='fab fa-instagram'/>
                 </a>
-                <a className='social-icon-link Youtube' href={"https://www.youtube.com/@rievolutioncycling6178"} target="_blank" rel="noopener noreferrer">
-                <i className='fab fa-youtube'/>
-                </a>
             </div>
         </div>
       </section>
+      <p>
+        Made by{" "}
+        <a href="https://www.google.com/" target="_blank" rel="noopener noreferrer" className="footer-link">
+                Me 😊
+        </a>
+      </p>
     </div>
 
   )

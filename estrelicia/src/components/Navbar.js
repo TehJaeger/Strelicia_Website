@@ -9,6 +9,9 @@ function Navbar() {
 
     const handleClick = () => setClick(!click);
     const closeMobileMenu = () => setClick(false);
+    const [showModal, setShowModal] = useState(false);
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
 
     
     const showButton = () => {
@@ -29,7 +32,7 @@ function Navbar() {
         <nav className="navbar">
             <div className="navbar-container">
                 <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
-                    <img src="/images/Img1.png" alt="Simbolo" className="navbar-image" />
+                    <img src="http://localhost:3001/images/Img1.png" alt="Simbolo" className="navbar-image" />
                     <span className="navbar-text">
                         Strelicia <i className="fa-solid fa-house"></i>
                     </span>
@@ -45,7 +48,7 @@ function Navbar() {
                     </li>
                     <li className='nav-item'>
                         <Link to ='/Calender' className='nav-links' onClick={closeMobileMenu}>
-                            Calender    
+                            Calendário    
                         </Link>
                     </li>
                     <li className='nav-item'>
@@ -54,18 +57,68 @@ function Navbar() {
                         </a>
                     </li>
                     <li>
-                        <Link to='/sign-up' className='nav-links-mobile' onClick={closeMobileMenu}>
-                            Sign Up
-                        </Link>
+                        <span className='nav-links-mobile' onClick={() => setShowModal(true)}>
+                            Promoções
+                        </span>
                     </li>
                 </ul>
-                <Link to ='/sign-up' className='nav-links' onClick={closeMobileMenu} >
-                {button && <Button buttonStyle='btn--outline'>SING UP</Button>}
-                </Link>
+                {button && (<span className="nav-links" onClick={() => setShowModal(true)} style={{ cursor: "pointer" }} >
+                    <Button buttonStyle="btn--outline">
+                        Promoções
+                    </Button>
+                </span>)}                
             </div>
         </nav>
 
+
+        {showModal && (<div className="modal-overlay" onClick={() => setShowModal(false)}>
+                <div className="modal" onClick={(e) => e.stopPropagation()}>
+                <button className="close-btn" onClick={() => setShowModal(false)}>
+                    <i className="fa-solid fa-xmark"></i>
+                </button>
+
+      <h3>Receba Promoções</h3>
+      <h5>Receba avisos das nossas promoções por email</h5>
+
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <button
+        className="submit-btn"
+        onClick={async () => {
+          const res = await fetch("http://localhost:3001/subscribe", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+
+          const data = await res.json();
+          setMessage(data.message);
+
+          if (res.ok) {
+            setMessage("Subscrito com sucesso!");
+            setEmail("");
+
+            setTimeout(() => {
+                setShowModal(false);
+                setMessage(""); 
+            }, 1200);
+        }
+        }}
+      >
+        Submeter
+      </button>
+
+      {message && <p className="modal-message">{message}</p>}
+    </div>
+    </div>
+    )}
     </>
+    
   )
 }
 

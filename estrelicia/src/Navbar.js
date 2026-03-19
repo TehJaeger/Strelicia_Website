@@ -27,7 +27,7 @@ function Navbar() {
             <div className="navbar-container">
                 <Link to="/" className="navbar-logo">
                     Estrelicia <i className="fa-solid fa-house"></i>
-                    <img src='/images/Img1.png' alt = "Simbolo"></img>
+                    <img src='http://localhost:3001/images/Img1.png' alt = "Simbolo"></img>
 
                 </Link>
 
