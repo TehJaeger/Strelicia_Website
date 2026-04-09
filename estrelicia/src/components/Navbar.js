@@ -33,9 +33,6 @@ function Navbar() {
             <div className="navbar-container">
                 <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
                     <img src="http://localhost:3001/images/Img1.png" alt="Simbolo" className="navbar-image" />
-                    <span className="navbar-text">
-                        Strelicia <i className="fa-solid fa-house"></i>
-                    </span>
                 </Link>
                 <div className = "menu-icon" onClick={handleClick}>
                     <i className={click ? 'fa-solid fa-times' : 'fa-solid fa-bars'} />

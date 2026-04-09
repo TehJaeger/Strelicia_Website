@@ -102,7 +102,7 @@ app.post("/bookings", async (req, res) => {
     d < endDate;
     d.setDate(d.getDate() + 1)
   ) {
-    const dateStr = d.toLocaleDateString("sv-SE");
+    const dateStr = d.toISOString().split("T")[0];
 
     if (airbnbBlocked.includes(dateStr)) {
       return res.status(400).json({
@@ -176,29 +176,35 @@ const fetchAirbnbBlockedDates = async () => {
   const response = await fetch(AIRBNB_ICAL_URL);
   const icsText = await response.text();
 
-  const data = ical.parseICS(icsText);
-
   const blockedDates = [];
 
-  for (const key in data) {
-    const event = data[key];
+  const events = icsText.split("BEGIN:VEVENT");
 
-    if (event.type === "VEVENT") {
-      const start = new Date(event.start);
-      const end = new Date(event.end);
+  for (const event of events) {
+    if (!event.includes("DTSTART")) continue;
 
-      for (
-        let d = new Date(start);
-        d < end;
-        d.setDate(d.getDate() + 1)
-      ) {
-        blockedDates.push(d.toLocaleDateString("sv-SE"));
-      }
+    const startMatch = event.match(/DTSTART(?:;VALUE=DATE)?:(\d{8})/);
+    const endMatch = event.match(/DTEND(?:;VALUE=DATE)?:(\d{8})/);
+
+    if (!startMatch || !endMatch) continue;
+
+    const parseDate = (str) =>
+      new Date(Date.UTC(
+        parseInt(str.slice(0, 4)),
+        parseInt(str.slice(4, 6)) - 1,
+        parseInt(str.slice(6, 8))
+      ));
+
+    const start = parseDate(startMatch[1]);
+    const end = parseDate(endMatch[1]);
+
+    for (let d = new Date(start); d < end; d.setUTCDate(d.getUTCDate() + 1)) {
+      blockedDates.push(d.toISOString().split("T")[0]);
     }
   }
 
   return blockedDates;
-};
+}
 
 const getLocalBlockedDates = () => {
   const bookings = readBookings();
@@ -209,14 +215,15 @@ const getLocalBlockedDates = () => {
     const endDate = new Date(end);
 
     while (d < endDate) {
-      dates.push(d.toLocaleDateString("sv-SE"));
-      d.setDate(d.getDate() + 1);
+      dates.push(d.toISOString().split("T")[0]);
+
+      // ✅ USE UTC VERSION
+      d.setUTCDate(d.getUTCDate() + 1);
     }
   });
 
   return dates;
 };
-
 app.get("/blocked-dates", async (req, res) => {
   try {
     const now = Date.now();
@@ -374,6 +381,26 @@ app.post("/admin/update-price", authenticateAdmin, (req, res) => {
   }
 });
 
+app.post("/admin/update-weekend-price", authenticateAdmin, (req, res) => {
+  const { priceWeekend } = req.body;
+
+  if (!priceWeekend || isNaN(priceWeekend)) {
+    return res.status(400).json({ error: "Preço inválido" });
+  }
+
+  try {
+    const settings = JSON.parse(fs.readFileSync(settingsPath));
+
+    settings.priceWeekend = Number(priceWeekend);
+
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+
+    res.json({ message: "Weekend price updated successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update weekend price" });
+  }
+});
+
 app.post("/admin/update-popup", authenticateAdmin, (req, res) => {
   const { enabled } = req.body;
 
@@ -421,5 +448,25 @@ app.get("/admin/download-subscribers", authenticateAdmin, (req, res) => {
     res.send(content);
   } catch (err) {
     res.status(500).json({ error: "Failed to download subscribers" });
+  }
+});
+
+app.post("/admin/update-extra-guest-price", authenticateAdmin, (req, res) => {
+  const { extraGuestPrice } = req.body;
+
+  if (!extraGuestPrice || isNaN(extraGuestPrice)) {
+    return res.status(400).json({ error: "Preço inválido" });
+  }
+
+  try {
+    const settings = JSON.parse(fs.readFileSync(settingsPath));
+
+    settings.extraGuestPrice = Number(extraGuestPrice);
+
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+
+    res.json({ message: "Extra guest price updated successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update extra guest price" });
   }
 });

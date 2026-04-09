@@ -1,5 +1,7 @@
 {
-  "pricePerNight": 179,
+  "pricePerNight": 140,
+  "priceWeekend": 180,
+  "extraGuestPrice": 30,
   "showPrice": true,
   "popup": {
     "enabled": true,

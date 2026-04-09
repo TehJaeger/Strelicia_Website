@@ -15,7 +15,7 @@
 
 .popup-image-wrapper img {
   max-width: 100%;
-  max-height: 100vh;
+  max-height: 80vh;
   width: auto;     
   height: auto;    
   display: block;
@@ -54,7 +54,6 @@
   background: #c0976e;
   color: white;
   border: none;
-  border-radius: 8px;
   cursor: pointer;
   transition: 0.2s ease;
 }

@@ -13,12 +13,14 @@ function HeroSection() {
         <div className='hero-btns'>
             <Link to='/Calender'>
             <Button className='btns' buttonStyle='btn--outline' buttonSize='btn--large'>
-                Alugar
+                Reservar
             </Button>
             </Link>
-            <Button  className='btns' buttonStyle='btn--primary' buttonSize='btn--large' onClick={() => window.open('https://www.instagram.com/streliciahouse/', '_blank')}>
-                Ver Mais
+            <Link to='/More'>
+            <Button  className='btns' buttonStyle='btn--primary' buttonSize='btn--large'>
+                Saber Mais
             </Button>
+            </Link>
         </div>
     </div>
   )

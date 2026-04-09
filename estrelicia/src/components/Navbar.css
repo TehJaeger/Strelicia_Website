@@ -101,15 +101,6 @@ img {
   opacity: 1;
 }
 
-.navbar-logo:hover .navbar-image {
-  opacity: 0;
-}
-
-.navbar-logo:hover .navbar-text {
-  opacity: 1;
-}
-
-
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -126,7 +117,6 @@ img {
 .modal {
   background: white;
   padding: 30px;
-  border-radius: 12px;
   width: 320px;
   text-align: center;
   position: relative;

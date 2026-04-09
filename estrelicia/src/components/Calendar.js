@@ -19,7 +19,13 @@ const Calendar = () => {
   const [warningDate, setWarningDate] = useState(null);
 
   const [pricePerNight, setPricePerNight] = useState(0);
+  const [priceWeekend, setPriceWeekend] = useState(0);
   const [showPrice, setShowPrice] = useState(true);
+
+  const [guests, setGuests] = useState(1);
+  const [children, setChildren] = useState(0);
+  const [guestWarning, setGuestWarning] = useState(null);
+  const [extraGuestPrice, setExtraGuestPrice] = useState(30);
 
   const isokHour = () => {
   const now = new Date();
@@ -37,14 +43,16 @@ const Calendar = () => {
     return date.toDateString() === today.toDateString();
   };
 
-useEffect(() => {
-  fetch("http://localhost:3001/settings")
-    .then(res => res.json())
-    .then(data => {
-      setPricePerNight(data.pricePerNight);
-      setShowPrice(data.showPrice);
+  useEffect(() => {
+    fetch("http://localhost:3001/settings")
+      .then(res => res.json())
+      .then(data => {
+        setPricePerNight(data.pricePerNight);
+        setPriceWeekend(data.priceWeekend);
+        setShowPrice(data.showPrice);
+        setExtraGuestPrice(data.extraGuestPrice);
     });
-}, []);
+  }, []);
 
 
   useEffect(() => {
@@ -65,7 +73,7 @@ useEffect(() => {
   };
 
   fetchBlockedDates();
-}, []);
+  }, []);
 
   const isBlocked = (date) => {
     if (blockedDates.some(d => d.toDateString() === date.toDateString())) {
@@ -81,11 +89,36 @@ useEffect(() => {
     return false;
 };
 
+  const isWeekend = (date) => {
+    const day = date.getDay();
+    return day === 0 || day === 6; 
+  };
+
+  const countNightsByType = () => {
+    if (!range.start || !range.end) return { weekdays: 0, weekends: 0 };
+
+    let current = new Date(range.start);
+    let weekdays = 0;
+    let weekends = 0;
+
+    while (current < range.end) {
+      if (isWeekend(current)) {
+        weekends++;
+      } else {
+        weekdays++;
+      }
+
+      current.setDate(current.getDate() + 1);
+    }
+
+    return { weekdays, weekends };
+  };
+
   const hasBlockedBetween = (start, end) => {
     return blockedDates.some(d => d > start && d < end);
   };
 
-const isPast = (date) => {
+  const isPast = (date) => {
   const today = new Date();
   today.setHours(0,0,0,0);
   return date < today;
@@ -177,7 +210,16 @@ const isPast = (date) => {
   };
 
   const getTotalPrice = () => {
-    return getNumberOfNights() * pricePerNight;
+    const { weekdays, weekends } = countNightsByType();
+
+    let basePrice = (weekdays * pricePerNight) + (weekends * priceWeekend);
+
+    const nights = getNumberOfNights();
+    if (guests > 2) {
+      basePrice += (guests - 2) * extraGuestPrice * nights; //30 por cada noite
+    }
+
+    return basePrice;
   };
 
 
@@ -188,13 +230,20 @@ const isPast = (date) => {
     const end = range.end.toLocaleDateString("pt-PT");
     const days = nightsBetween(range.start, range.end);
 
-    if (!showPrice) {
-      return `Olá. Gostaria de reservar a casa por ${days} noites, de ${start} a ${end}.`;
+    const adultText = `${guests} ${guests === 1 ? "adulto" : "adultos"}`;
+    let guestText = adultText;
+    if (children > 0) {
+    const childText = `${children} ${children === 1 ? "criança" : "crianças"}`;
+    guestText += ` e ${childText}`;
     }
 
-    const price = pricePerNight * days;
+    if (!showPrice) {
+      return `Olá. Gostaria de reservar a casa para ${guestText}, por ${days} noites, de ${start} a ${end}.`;
+    }
 
-    return `Olá. Gostaria de reservar a casa por ${days} noites, de ${start} a ${end}, pelo preço de ${price}€`;
+    const totalPrice = getTotalPrice();
+
+    return `Olá. Gostaria de reservar a casa para ${guestText}, por ${days} noites, de ${start} a ${end}, pelo preço de ${totalPrice}€.`;
   };
 
 return (
@@ -271,28 +320,77 @@ return (
               }
             )
           }
-          </div>
-
-            {range.start && range.end && (
-              <>
-                {showPrice && (
-                 <p className="prices">
-                   Total é <strong>{getTotalPrice()}€</strong>{" "}
-                   (<strong>{pricePerNight}€</strong> por noite ×{" "}
-                   <strong>{getNumberOfNights()}</strong> noites)
-                 </p>
-                )}
-
-                <button
-                 className="event-popup-btn mt-4"
-                 onClick={() => setShowContactPopup(true)}
-                >
-                  Fazer a mensagem aqui
-               </button>
-             </>
-            )}
-          </div>    
         </div>
+        <div className="guest-section">
+        <div className="guest-box">
+          <label>Hospedes.</label>
+
+          <div className="guest-input-wrapper">
+          <input
+            type="number"
+            min="1"
+            value={guests}
+            onChange={(e) => {
+              const value = Number(e.target.value);
+                if (value + children <= 6) {
+                  setGuests(value);
+                } else {
+                  setGuestWarning("guests");
+                  setTimeout(() => setGuestWarning(null), 2000);
+                }
+              }}
+          />
+
+          {guestWarning === "guests" && (
+            <div className="guest-warning-popup">
+              Máx. 6 hóspedes
+            </div>
+          )}
+          </div>
+        </div>
+      
+      <div className="guest-box">
+        <label>Crianças (&lt; 3)</label>
+        <div className="guest-input-wrapper">
+        <input
+          type="number"
+          min="0"
+          value={children}
+          onChange={(e) => {
+            const value = Number(e.target.value);
+              if (guests + value <= 6) {
+                setChildren(value);
+              } else {
+                setGuestWarning("children");
+                setTimeout(() => setGuestWarning(null), 2000);
+              }
+          }}
+        />
+
+        {guestWarning === "children" && (
+          <div className="guest-warning-popup">
+            Máx. 6 hóspedes
+          </div>
+        )}
+        </div>
+      </div>
+      </div>
+
+
+        {showPrice && (
+        <p className={`prices ${!range.start || !range.end ? "hidden" : ""}`}>
+          Total é <strong>{getTotalPrice()}€</strong> por {" "}
+          <strong>{getNumberOfNights()}</strong> noites
+        </p>
+        )}
+
+        <button className={`event-popup-btn mt-4 ${!range.start || !range.end ? "hidden" : ""}`}
+          onClick={() => setShowContactPopup(true)}>
+              Fazer mensagem 
+            </button>
+       
+      </div>    
+    </div>
 
         {showContactPopup && (
           <div className="popup-overlay" onClick={() => setShowContactPopup(false)}>

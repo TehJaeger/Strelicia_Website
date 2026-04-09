@@ -4,9 +4,9 @@ import Navbar from './components/Navbar';
 import {BrowserRouter as Router, Routes ,Route } from 'react-router-dom';
 import Home from './components/Pages/Home';
 import Calender from './components/Pages/Calender';
-import SingUp from './components/Pages/SignUp';
 import Login from './components/Pages/Login';
 import Admin from './components/Pages/Admin';
+import More from './components/Pages/More';
 
 function App() {
   return (
@@ -16,10 +16,9 @@ function App() {
           <Routes>
             <Route path='/' exact Component= {Home}/>
             <Route path='/Calender' Component={Calender}/>
-            <Route path='/Calender' Component={Calender} />
-            <Route path='/sign-up' Component={SingUp} />
             <Route path='/log-in' Component={Login}/>
             <Route path='/admin' Component={Admin}/>
+            <Route path='/More' Component={More}/>
           </Routes>
       </Router>
     </>

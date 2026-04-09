@@ -77,8 +77,10 @@ const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState("");
   const [price, setPrice] = useState("");
+  const [priceWeekend, setPriceWeekend] = useState("");
   const [popupEnabled, setPopupEnabled] = useState(false);
   const [showPrice, setShowPrice] = useState(true);
+  const [extraGuestPrice, setExtraGuestPrice] = useState("");
 
   useEffect(() => {
     const storedAuth = localStorage.getItem("adminAuthenticated");
@@ -96,6 +98,8 @@ const Admin = () => {
     .then(res => res.json())
     .then(data => {
       setPrice(data.pricePerNight);
+      setPriceWeekend(data.priceWeekend);
+      setExtraGuestPrice(data.extraGuestPrice);
       setPopupEnabled(data.popup.enabled);
       setShowPrice(data.showPrice);
     });
@@ -157,54 +161,105 @@ const Admin = () => {
 
 
       <div className="admin-section price-section">
-        <h3>Preço por Noite</h3>
 
-        <label style={{ marginBottom: "10px", display: "block" }}>
-          <input
-            type="checkbox"
-            checked={showPrice}
-            onChange={async (e) => {
-              const newValue = e.target.checked;
-
-              await fetch("http://localhost:3001/admin/update-show-price", {
-               method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "x-admin-password": password
-                },
-                body: JSON.stringify({ showPrice: newValue })
-              });
-
-              setShowPrice(newValue);
-           }}
-          />
-          Mostrar preço no calendário
-        </label>
-
+      <label>
         <input
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
+          type="checkbox"
+          checked={showPrice}
+          onChange={async (e) => {
+          const newValue = e.target.checked;
 
-        <button
-          onClick={async () => {
-            const res = await fetch("http://localhost:3001/admin/update-price", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "x-admin-password": password
-              },
-              body: JSON.stringify({ price })
-            });
+            await fetch("http://localhost:3001/admin/update-show-price", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-admin-password": password
+            },
+          body: JSON.stringify({ showPrice: newValue })
+        });
+      setShowPrice(newValue);
+    }}
+    />
+      Mostrar Preço
+    </label>
 
-            const data = await res.json();
+    <div className="price-row">
+    <div className="price-group">
+      <input
+        type="number"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+      />
+
+     <button
+        onClick={async () => {
+          const res = await fetch("http://localhost:3001/admin/update-price", {
+           method: "POST",
+           headers: {
+              "Content-Type": "application/json",
+              "x-admin-password": password
+            },
+            body: JSON.stringify({ price })
+          });
+
+          const data = await res.json();
             alert(data.message);
           }}
         >
-          Atualizar Preço
+         Preço Semana
         </button>
       </div>
+
+      <div className="price-group">
+        <input
+         type="number"
+         value={priceWeekend}
+         onChange={(e) => setPriceWeekend(e.target.value)}
+        />
+        <button
+         onClick={async () => {
+            const res = await fetch("http://localhost:3001/admin/update-weekend-price", {
+              method: "POST",
+             headers: {
+                "Content-Type": "application/json",
+               "x-admin-password": password
+             },
+              body: JSON.stringify({ priceWeekend })
+           });
+
+           const data = await res.json();
+           alert(data.message);
+          }}
+       >
+         Fim de Semana
+        </button>
+      </div>
+    </div>
+     <div className="price-group">
+  <input
+    type="number"
+    value={extraGuestPrice}
+    onChange={(e) => setExtraGuestPrice(e.target.value)}
+  />
+
+  <button
+    onClick={async () => {
+      const res = await fetch("http://localhost:3001/admin/update-extra-guest-price", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-password": password
+          },
+          body: JSON.stringify({ extraGuestPrice })
+        });
+        const data = await res.json();
+          alert(data.message);
+      }}
+      >
+        Extra Hóspede
+      </button>
+    </div>
+  </div>
 
       <div className="admin-section popup-section">
           <h3>Homepage Popup</h3>

@@ -1,5 +1,5 @@
 .background{
-     display: flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
@@ -18,7 +18,7 @@
 
 .calender-app {
   width: min(90vw, 700px);
-  min-height: 520px;
+  min-height: 600px;
   background-color: gray;
   padding: clamp(1rem, 2vw, 2rem);
   border: 0.15rem solid black;
@@ -231,13 +231,24 @@
 }
 
 .prices {
-  margin-left: 6rem;
-  margin-bottom: 1rem;
+  text-align: center;
+  margin: 1rem 0;
   font-size: 1.1rem;
   color: white;
   letter-spacing: 0.05rem;
 }
 
+.price-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100px; 
+  justify-content: center;
+}
+
+.hidden {
+  visibility: hidden;
+}
 .warning-day {
   position: relative;
 }
@@ -254,13 +265,71 @@
   border-radius: 6px;
   white-space: nowrap;
   z-index: 20;
-  animation: fadeIn 0.2s ease-in-out;
+  animation: fadeInOut 2s ease-in-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(5px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+.guest-section {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
 }
+
+.guest-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.guest-box input {
+  width: clamp(60px, 8vw, 90px);
+  height: clamp(30px, 4vw, 40px);
+  font-size: clamp(0.9rem, 1.2vw, 1.2rem);
+  text-align: center;
+}
+
+.guest-box label {
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  margin-bottom: 4px;
+  opacity: 0.9;
+}
+
+.guest-input-wrapper {
+  position: relative;
+}
+
+.guest-warning-popup {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #a38465;
+  color: white;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 20;
+  animation: fadeInOut 2s ease forwards;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 
 @media (max-width: 600px) {
 
@@ -278,6 +347,10 @@
 
   .days span{
     font-size: clamp(0.8rem, 3.5vw, 1.2rem);
+  }
+  .guest-section {
+    flex-direction: column;
+    gap: 1rem;
   }
 
 }

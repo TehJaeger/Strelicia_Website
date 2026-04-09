@@ -178,7 +178,7 @@
 }
 
 .popup-section button:hover {
-  background: #8f7154;
+  background: rgb(192, 151, 110);;
 }
 
 .admin_grid {
@@ -204,6 +204,19 @@
   background: #ddd;
   overflow: hidden;
   border-radius: 8px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap; 
+}
+
+.price-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .admin-preview img,
